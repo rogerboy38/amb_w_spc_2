@@ -2,20 +2,16 @@ import frappe
 
 def validate_system_requirements():
     """
-    Validate system requirements before installing the app
+    Validate system requirements before installing amb_w_spc app
     """
     try:
-        # Check if ERPNext is installed
-        if not frappe.db.exists("Module Def", "ERPNext"):
-            frappe.throw("ERPNext is required but not installed")
+        # Check if required apps are installed - CORRECT WAY
+        installed_apps = frappe.get_installed_apps()
         
-        # Check Frappe version
-        frappe_version = frappe.__version__
-        if int(frappe_version.split('.')[0]) < 15:
-            frappe.throw(f"Frappe version 15 or higher required. Current version: {frappe_version}")
-        
-        # Add any other system validation checks here
-        frappe.msgprint("System requirements validated successfully")
+        if 'erpnext' not in installed_apps:
+            frappe.throw("ERPNext is required but not installed. Please install ERPNext first.")
+            
+        frappe.msgprint("✅ System requirements validated successfully")
         
     except Exception as e:
         frappe.log_error(f"System requirements validation failed: {str(e)}")
